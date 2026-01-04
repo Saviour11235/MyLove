@@ -13,29 +13,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // 1. This is the tab title
   title: 'A Special Message For You ❤️',
-  description: 'I made something small to show you how much you mean to me. Open it when you have a second. ✨',
+  description: 'I made something small for you. Open it! ✨',
   
-  // This is the favicon (the icon on the browser tab)
+  // 2. Browser Favicon
   icons: {
     icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">❤️</text></svg>',
   },
 
-  // This is for WhatsApp, Facebook, Instagram previews
+  // 3. WhatsApp / Social Media Preview
   openGraph: {
     title: 'For My Favorite Person ❤️',
     description: 'A little surprise just for you...',
-    type: 'website',
-    // If you have a cute photo of you two, put it in /public/images/preview.jpg
-    // and reference it here. If not, it will just show the text card.
+    url: 'https://your-special-site.vercel.app', // CHANGE THIS TO YOUR ACTUAL URL
+    siteName: 'My Special Message',
     images: [
       {
-        url: 'https://your-domain.com/images/mine.jpg', 
+        // Use an absolute URL. WhatsApp often fails with relative paths.
+        url: 'https://your-special-site.vercel.app/images/mine.jpg', 
         width: 1200,
         height: 630,
-        alt: 'For You',
+        alt: 'A special surprise',
       },
     ],
+    locale: 'en_US',
+    type: 'website',
   },
 }
 export default function RootLayout({
