@@ -10,23 +10,39 @@ export default function Home() {
   const audioRef = useRef(null);
 
 useEffect(() => {
-    if (step === 3 && audioRef?.current) {
-      audioRef?.current?.currentTime = 15; // Starts at 30s
-      audioRef?.current?.volume = 0; // Starts at 0 volume
-      audioRef.current?.play();
+  // Use a local variable to satisfy TS null-checks within the interval
+  const audio = audioRef.current;
 
-      // Slowly increase volume over 2 seconds
-      let vol = 0;
-      const interval = setInterval(() => {
-        if (vol < 0.4) {
-          vol += 0.05;
-          audioRef?.current?.volume = vol;
-        } else {
-          clearInterval(interval);
-        }
-      }, 200);
-    }
-  }, [step]);
+  if (step === 3 && audio) {
+    // 1. Set start time and initial volume
+    audio.currentTime = 15; 
+    audio.volume = 0; 
+
+    // 2. Play the audio
+    audio.play()
+      .then(() => {
+        let currentVol = 0;
+        const targetVol = 0.4;
+        const stepAmount = 0.05;
+
+        // Use window.setInterval to ensure it returns a number (standard for browsers)
+        const fadeInterval = window.setInterval(() => {
+          if (currentVol < targetVol) {
+            currentVol = Math.min(targetVol, currentVol + stepAmount);
+            // Ensure audio still exists before setting property
+            if (audio) {
+              audio.volume = currentVol;
+            }
+          } else {
+            window.clearInterval(fadeInterval);
+          }
+        }, 200);
+      })
+      .catch((error: Error) => {
+        console.error("Playback failed:", error);
+      });
+  }
+}, [step]);
   // Escape button logic
   useEffect(() => {
     if (step === 2) {
