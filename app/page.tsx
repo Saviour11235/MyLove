@@ -10,17 +10,17 @@ export default function Home() {
   const audioRef = useRef(null);
 
 useEffect(() => {
-    if (step === 3 && audioRef.current) {
-      audioRef.current.currentTime = 15; // Starts at 30s
-      audioRef.current.volume = 0; // Starts at 0 volume
-      audioRef.current.play();
+    if (step === 3 && audioRef?.current) {
+      audioRef?.current?.currentTime = 15; // Starts at 30s
+      audioRef?.current?.volume = 0; // Starts at 0 volume
+      audioRef.current?.play();
 
       // Slowly increase volume over 2 seconds
       let vol = 0;
       const interval = setInterval(() => {
         if (vol < 0.4) {
           vol += 0.05;
-          audioRef.current.volume = vol;
+          audioRef?.current?.volume = vol;
         } else {
           clearInterval(interval);
         }
