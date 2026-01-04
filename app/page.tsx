@@ -7,13 +7,13 @@ export default function Home() {
   const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
   const [isEscaping, setIsEscaping] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
 useEffect(() => {
-  // Use a local variable to satisfy TS null-checks within the interval
+  // We check if audioRef.current exists and cast it to the correct type
   const audio = audioRef.current;
 
-  if (step === 3 && audio) {
+  if (step === 3 && audio instanceof HTMLAudioElement) {
     // 1. Set start time and initial volume
     audio.currentTime = 15; 
     audio.volume = 0; 
@@ -25,20 +25,19 @@ useEffect(() => {
         const targetVol = 0.4;
         const stepAmount = 0.05;
 
-        // Use window.setInterval to ensure it returns a number (standard for browsers)
         const fadeInterval = window.setInterval(() => {
           if (currentVol < targetVol) {
             currentVol = Math.min(targetVol, currentVol + stepAmount);
-            // Ensure audio still exists before setting property
+            // Re-check existence inside the interval for safety
             if (audio) {
-              audio.volume = currentVol;
+              audio.volume = Number(currentVol.toFixed(2));
             }
           } else {
             window.clearInterval(fadeInterval);
           }
         }, 200);
       })
-      .catch((error: Error) => {
+      .catch((error: unknown) => {
         console.error("Playback failed:", error);
       });
   }
